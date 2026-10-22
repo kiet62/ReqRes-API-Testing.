@@ -20,14 +20,14 @@ jobs:
           node-version: '22'
 
       - name: Install Newman
-        run: |
-          npm install -g newman
+        run: npm install -g newman
 
       - name: Monitor ReqRes API
         env:
           REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: |
           newman run ReqRes.postman_collection.json \
+            --folder "Monitor API Performance" \
             --env-var "baseUrl=https://reqres.in" \
             --env-var "apiKey=$REQRES_API_KEY" \
             --reporters cli
