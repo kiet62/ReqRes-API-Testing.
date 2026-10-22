@@ -1,0 +1,34 @@
+{
+	"id": "5805e4b3-52cd-4007-a3be-81dd28cd85e0",
+	"name": "2474802010206_letankiet_ReqRes_Env",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userid",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "apiKey",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-10-22T10:13:34.741Z",
+	"_postman_exported_using": "Postman/12.33.3-261022-0328"
+}
