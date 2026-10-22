@@ -11,67 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Newman
+        run: npm install -g newman
+
       - name: Monitor ReqRes API
         env:
           REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: |
-          python3 - <<'PY'
-          import os
-          import time
-          import urllib.request
-          import urllib.error
-          import sys
-
-          url = "https://reqres.in/api/users?page=1"
-
-          api_key = os.environ.get("REQRES_API_KEY", "")
-
-          if not api_key:
-              print("FAIL: REQRES_API_KEY is missing")
-              sys.exit(1)
-
-          headers = {
-              "x-api-key": api_key,
-              "Accept": "application/json"
-          }
-
-          request = urllib.request.Request(
-              url,
-              headers=headers,
-              method="GET"
-          )
-
-          start = time.perf_counter()
-
-          try:
-              with urllib.request.urlopen(request, timeout=15) as response:
-                  status = response.status
-                  response.read()
-
-          except urllib.error.HTTPError as e:
-              status = e.code
-              error_body = e.read().decode(
-                  "utf-8", errors="replace"
-              )
-              print(f"HTTP Error: {status}")
-              print(f"Response Body: {error_body[:500]}")
-
-          except Exception as e:
-              print(f"Monitoring failed: {e}")
-              sys.exit(1)
-
-          response_time = (time.perf_counter() - start) * 1000
-
-          print(f"Status Code: {status}")
-          print(f"Response Time: {response_time:.2f} ms")
-
-          if status != 200:
-              print("FAIL: Availability check failed")
-              sys.exit(1)
-
-          if response_time >= 800:
-              print("FAIL: Response time exceeded 800 ms")
-              sys.exit(1)
-
-          print("PASS: Availability and Performance checks")
-          PY
+          newman run ReqRes_Monitor.json \
+            --env-var "baseUrl=https://reqres.in" \
+            --env-var "apiKey=$REQRES_API_KEY" \
+            --reporters cli
